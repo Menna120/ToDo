@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="8dp"
+    android:orientation="vertical"
+    app:cardCornerRadius="16dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    app:contentPaddingBottom="16dp"
+    app:contentPaddingLeft="16dp"
+    app:contentPaddingRight="24dp"
+    app:contentPaddingTop="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_corner" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/task_title_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium.Bold"
+                android:textColor="?attr/colorPrimary"
+                tools:text="Play basket ball" />
+
+            <TextView
+                android:id="@+id/task_time_text"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.App.LabelMedium"
+                android:textColor="?attr/colorOnSurface"
+                tools:text="10:30 AM" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/done_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/done"
+            android:textAppearance="@style/TextAppearance.App.TitleLarge"
+            android:textColor="@color/green"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/mark_done_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_corner"
+            android:contentDescription="@string/mark_done"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="8dp"
+            android:src="@drawable/ic_check" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

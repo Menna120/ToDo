@@ -5,6 +5,8 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:colorBackground">@color/navy</item>
         <item name="colorSurface">@color/blue_gray</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="colorOnSurfaceVariant">@color/gray</item>
 
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:windowBackground">@color/navy</item>

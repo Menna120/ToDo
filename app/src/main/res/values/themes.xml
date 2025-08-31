@@ -5,6 +5,8 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:colorBackground">@color/light_green</item>
         <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/dark_gray</item>
+        <item name="colorOnSurfaceVariant">@color/light_gray</item>
 
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:windowBackground">@color/light_green</item>
@@ -13,13 +15,61 @@
     <style name="FabWithBorder" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="backgroundTint">?attr/colorPrimary</item>
         <item name="tint">?attr/colorOnPrimary</item>
-        <item name="strokeColor">?attr/colorSurface</item>
-        <item name="strokeWidth">2dp</item>
     </style>
 
-    <style name="TextAppearance.App.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+    <style name="TextAppearance.App.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
         <item name="android:fontFamily">@font/poppins_bold</item>
-        <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="TextAppearance.App.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextAppearance.App.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.App.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TextAppearance.App.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextAppearance.App.BodyMedium.Bold" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="TextAppearance.App.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="Widget.App.EditText" parent="Widget.Material3.TextInputEditText.FilledBox">
+        <item name="boxBackgroundColor">@android:color/transparent</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.BodyLarge</item>
+        <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
+        <item name="hintTextAppearance">@style/TextAppearance.App.BodyMedium</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+    </style>
+
+    <style name="MyPickerDialogTheme" parent="Widget.Material3.MaterialTimePicker">
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/dark_gray</item>
     </style>
 </resources>

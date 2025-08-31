@@ -1,6 +1,18 @@
 <resources>
     <string name="app_name">ToDo</string>
-    <string name="title_home">To Do List</string>
+    <string name="title_todo_list">To Do List</string>
     <string name="title_settings">Settings</string>
     <string name="add_task">Add Task</string>
+    <string name="add_new_task">Add new Task</string>
+    <string name="enter_task_title">enter task title</string>
+    <string name="select_time">Select time</string>
+    <string name="enter_task_description">enter task description</string>
+    <string name="select_date">Select Date</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="mark_done">Mark Done</string>
+    <string name="done">Done!</string>
+    <string name="previous_month">Previous Month</string>
+    <string name="next_month">Next Month</string>
+    <string name="month_year_format">%1$s %2$d</string>
 </resources>

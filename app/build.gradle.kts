@@ -30,11 +30,14 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures {
         viewBinding = true
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
     }
 }
 
@@ -52,6 +55,8 @@ dependencies {
     //Splash Screen
     implementation(libs.androidx.core.splashscreen)
 
+    // Calendar
+    implementation(libs.calendar)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
