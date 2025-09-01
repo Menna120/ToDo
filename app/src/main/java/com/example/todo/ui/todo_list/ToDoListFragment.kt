@@ -1,13 +1,16 @@
 package com.example.todo.ui.todo_list
 
+// import java.time.ZoneId // No longer needed for basic date conversion here
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.todo.R
-import com.example.todo.data.tasks
+import com.example.todo.ToDoApplication
+import com.example.todo.database.TaskRepository
 import com.example.todo.databinding.FragmentTodoListBinding
 import com.example.todo.ui.todo_list.adapter.DayViewContainer
 import com.example.todo.ui.todo_list.adapter.TasksAdapter
@@ -15,6 +18,8 @@ import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.WeekDayBinder
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -27,6 +32,9 @@ class ToDoListFragment : Fragment() {
     private var selectedDay: LocalDate = LocalDate.now()
     private var displayedYearMonth = YearMonth.from(selectedDay)
 
+    private lateinit var taskRepository: TaskRepository
+    private lateinit var tasksAdapter: TasksAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,24 +46,46 @@ class ToDoListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.tasksRecyclerView.adapter = TasksAdapter(tasks) { i ->
-            tasks[i].isDone = true
-            binding.tasksRecyclerView.adapter?.notifyItemChanged(i) // Consider using DiffUtil for better performance
+
+        taskRepository = (requireActivity().application as ToDoApplication).taskRepository
+
+        tasksAdapter = TasksAdapter { taskToUpdate ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                taskRepository.updateTaskIsDone(taskToUpdate.id, !taskToUpdate.isDone)
+            }
         }
+        binding.tasksRecyclerView.adapter = tasksAdapter
+
+        observeTasks()
         setupCalendar()
         setupDayBinder()
     }
+
+    private fun observeTasks() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            taskRepository.getAllTasks()
+                .collectLatest { tasksList ->
+                    tasksAdapter
+                        .submitList(
+                            tasksList
+                                .filter { it.date.toLocalDate() == selectedDay }
+                        )
+                }
+        }
+    }
+
 
     private fun setupDayBinder() {
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, data: WeekDay) = container.run {
-                binding.weekDay.text =
+                container.binding.weekDay.text =
                     data.date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
-                binding.monthDay.text = data.date.dayOfMonth.toString()
+                container.binding.monthDay.text =
+                    data.date.dayOfMonth.toString()
                 this.view.setOnClickListener { updateSelectedDay(data.date) }
-                binding.root.cardElevation =
-                    if (selectedDay == data.date) 16f else 0f // Use resources for dimensions
+                container.binding.root.cardElevation =
+                    if (selectedDay == data.date) 16f else 0f
                 updateTextColor(this, data.date)
             }
         }
@@ -64,10 +94,13 @@ class ToDoListFragment : Fragment() {
     private fun updateSelectedDay(newDate: LocalDate) {
         if (selectedDay == newDate) return
 
-        binding.weekCalendarView.notifyDateChanged(selectedDay)
+        val oldSelectedDay = selectedDay
         selectedDay = newDate
+        binding.weekCalendarView.notifyDateChanged(oldSelectedDay)
         binding.weekCalendarView.notifyDateChanged(selectedDay)
+        observeTasks()
     }
+
 
     private fun updateTextColor(container: DayViewContainer, date: LocalDate) {
         val colorRes =
@@ -89,8 +122,10 @@ class ToDoListFragment : Fragment() {
             )
             scrollToWeek(selectedDay)
             weekScrollListener = { weekDays ->
-                val firstDateInWeek = weekDays.days[3].date
-                displayedYearMonth = YearMonth.from(firstDateInWeek)
+                val referenceDayInWeek = weekDays.days[3].date
+                if (YearMonth.from(referenceDayInWeek) != displayedYearMonth) {
+                    displayedYearMonth = YearMonth.from(referenceDayInWeek)
+                }
                 binding.monthYearText.text = getString(
                     R.string.month_year_format,
                     displayedYearMonth.month.getDisplayName(

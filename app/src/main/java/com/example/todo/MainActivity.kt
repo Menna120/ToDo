@@ -3,21 +3,40 @@ package com.example.todo
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.format.DateFormat.is24HourFormat
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.todo.database.TaskRepository
+import com.example.todo.database.model.Task
 import com.example.todo.databinding.ActivityMainBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
+import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+    private lateinit var taskRepository: TaskRepository
+
+    private var selectedDate: LocalDate = LocalDate.now()
+    private var selectedTime: LocalTime = LocalTime.MIN
+    private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, MMM dd")
+    private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,18 +45,22 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        taskRepository = (application as ToDoApplication).taskRepository
+
         setupNavigation()
         setupBottomSheet()
         setupFab()
     }
 
     private fun setupNavigation() {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
-        val navController = navHostFragment.navController
-        setSupportActionBar(binding.toolbar)
+        val navController = (
+                supportFragmentManager.findFragmentById(
+                    R.id.nav_host_fragment_activity_main
+                ) as NavHostFragment).navController
         val appBarConfiguration =
             AppBarConfiguration(setOf(R.id.navigation_todo_list, R.id.navigation_settings))
+
+        setSupportActionBar(binding.toolbar)
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNavView.setupWithNavController(navController)
     }
@@ -46,6 +69,14 @@ class MainActivity : AppCompatActivity() {
         val titleEditText: EditText = binding.addTaskBottomSheetContent.taskTitleEditText.editText!!
         val descriptionEditText: EditText =
             binding.addTaskBottomSheetContent.taskDescriptionEditText.editText!!
+        val timeText = binding.addTaskBottomSheetContent.timeText
+        val dayText = binding.addTaskBottomSheetContent.dateText
+
+        dayText.text = selectedDate.format(dateFormatter)
+        timeText.text = selectedTime.format(timeFormatter)
+
+        dayText.setOnClickListener { showDatePickerDialog() }
+        timeText.setOnClickListener { showTimePickerDialog() }
 
         val bottomSheetView = binding.addTaskBottomSheet
         (bottomSheetView.layoutParams as CoordinatorLayout.LayoutParams).behavior =
@@ -57,11 +88,7 @@ class MainActivity : AppCompatActivity() {
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
-                    BottomSheetBehavior.STATE_COLLAPSED -> handleBottomSheetCollapsed(
-                        titleEditText,
-                        descriptionEditText
-                    )
-
+                    BottomSheetBehavior.STATE_COLLAPSED,
                     BottomSheetBehavior.STATE_EXPANDED -> updateFabIcon(
                         titleEditText,
                         descriptionEditText
@@ -85,11 +112,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleBottomSheetCollapsed(titleEditText: EditText, descriptionEditText: EditText) {
-        binding.addNewTaskFab.setImageResource(R.drawable.ic_add)
-        titleEditText.text.clear()
-        descriptionEditText.text.clear()
+    private fun showDatePickerDialog() {
+        val datePicker =
+            MaterialDatePicker.Builder
+                .datePicker()
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build()
+
+        datePicker.show(supportFragmentManager, "tag")
+        datePicker.addOnPositiveButtonClickListener {
+            selectedDate = LocalDate.ofEpochDay(it / 86400000)
+            binding.addTaskBottomSheetContent.dateText.text = selectedDate.format(dateFormatter)
+        }
     }
+
+    private fun showTimePickerDialog() {
+        val clockFormat = if (is24HourFormat(this)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+        val picker =
+            MaterialTimePicker.Builder()
+                .setTimeFormat(clockFormat)
+                .build()
+        picker.show(supportFragmentManager, "tag")
+
+        picker.addOnPositiveButtonClickListener {
+            selectedTime = LocalTime.of(picker.hour, picker.minute)
+            binding.addTaskBottomSheetContent.timeText.text = selectedTime.format(timeFormatter)
+        }
+    }
+
 
     private fun createTextWatcher(
         titleEditText: EditText,
@@ -106,19 +156,51 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupFab() {
         binding.addNewTaskFab.setOnClickListener {
-            bottomSheetBehavior.state =
-                if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED)
-                    BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
+            val titleEditText = binding.addTaskBottomSheetContent.taskTitleEditText.editText!!
+            val descriptionEditText =
+                binding.addTaskBottomSheetContent.taskDescriptionEditText.editText!!
+            val title = titleEditText.text.toString().trim()
+            val description = descriptionEditText.text.toString().trim()
+
+            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                if (title.isNotEmpty()) {
+                    val taskDateTime = LocalDateTime.of(selectedDate, selectedTime)
+                    val newTask = Task(
+                        title = title,
+                        description = description,
+                        date = taskDateTime
+                    )
+                    lifecycleScope.launch { taskRepository.addTask(newTask) }
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                } else bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            } else bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
 
     private fun updateFabIcon(titleEditText: EditText, descriptionEditText: EditText) {
-        val titleHasText = titleEditText.text.isNotEmpty()
-        val descriptionHasText = descriptionEditText.text.isNotEmpty()
-        val iconRes =
-            if (titleHasText && descriptionHasText) R.drawable.ic_check else R.drawable.ic_close
+        val timeText = binding.addTaskBottomSheetContent.timeText
+        val dayText = binding.addTaskBottomSheetContent.dateText
+
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            val titleHasText = titleEditText.text.isNotEmpty()
+            val iconRes = if (titleHasText) R.drawable.ic_check else R.drawable.ic_close
             binding.addNewTaskFab.setImageResource(iconRes)
+        } else if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+            binding.addNewTaskFab.setImageResource(R.drawable.ic_add)
+            titleEditText.text.clear()
+            descriptionEditText.text.clear()
+
+            selectedDate = LocalDate.now()
+            selectedTime = LocalTime.now()
+            dayText.text = selectedDate.format(dateFormatter)
+            timeText.text = selectedTime.format(timeFormatter)
+
+            hideKeyboard(titleEditText)
         }
+    }
+
+    private fun hideKeyboard(view: View) {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
