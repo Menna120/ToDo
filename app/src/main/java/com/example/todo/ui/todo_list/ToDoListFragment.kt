@@ -17,6 +17,7 @@ import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.view.WeekDayBinder
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -34,6 +35,8 @@ class ToDoListFragment : Fragment() {
     private lateinit var taskRepository: TaskRepository
     private lateinit var tasksAdapter: TasksAdapter
 
+    private var tasksJob: Job? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -48,11 +51,26 @@ class ToDoListFragment : Fragment() {
 
         taskRepository = (requireActivity().application as ToDoApplication).taskRepository
 
-        tasksAdapter = TasksAdapter { taskToUpdate ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                taskRepository.updateTaskIsDone(taskToUpdate.id, !taskToUpdate.isDone)
+        tasksAdapter = TasksAdapter(
+            onTaskDoneClicked = { task ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    taskRepository.updateTaskIsDone(task.id, !task.isDone)
+                }
+            },
+            onTaskDeleteSwipe = { task ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    taskRepository.deleteTask(task)
+                }
+            },
+            onTaskClicked = { task ->
+                val updateDialog = UpdateTaskDialog(task) { updateTask ->
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        taskRepository.updateTask(updateTask)
+                    }
+                }
+                updateDialog.show(parentFragmentManager, null)
             }
-        }
+        )
         binding.tasksRecyclerView.adapter = tasksAdapter
 
         observeTasks()
@@ -61,18 +79,13 @@ class ToDoListFragment : Fragment() {
     }
 
     private fun observeTasks() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            taskRepository.getAllTasks()
-                .collectLatest { tasksList ->
-                    tasksAdapter
-                        .submitList(
-                            tasksList
-                                .filter { it.date.toLocalDate() == selectedDay }
-                        )
-                }
+        tasksJob?.cancel()
+        tasksJob = viewLifecycleOwner.lifecycleScope.launch {
+            taskRepository.getTasksByDay(selectedDay).collectLatest { tasksList ->
+                tasksAdapter.submitList(tasksList)
+            }
         }
     }
-
 
     private fun setupDayBinder() {
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {

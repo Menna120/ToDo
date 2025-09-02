@@ -13,10 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
 import com.example.todo.database.model.Task
 import com.example.todo.databinding.ItemTaskBinding
+import com.zerobranch.layout.SwipeLayout
 import java.time.format.DateTimeFormatter
 
 class TasksAdapter(
-    private val onTaskDoneClicked: (task: Task) -> Unit
+    private val onTaskDoneClicked: (task: Task) -> Unit,
+    private val onTaskDeleteSwipe: (task: Task) -> Unit,
+    private val onTaskClicked: (task: Task) -> Unit,
 ) : ListAdapter<Task, TasksAdapter.TaskViewHolder>(TaskDiffCallback()) {
 
     override fun onCreateViewHolder(
@@ -28,18 +31,31 @@ class TasksAdapter(
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val task = getItem(position)
-        holder.bind(task, onTaskDoneClicked)
+        holder.bind(task)
+
+        holder.binding.markDoneButton.setOnClickListener { onTaskDoneClicked(task) }
+
+        holder.binding.swipeLayout.setOnActionsListener(object : SwipeLayout.SwipeActionsListener {
+            override fun onOpen(direction: Int, isContinuous: Boolean) {
+                if (direction == SwipeLayout.RIGHT)
+                    onTaskDeleteSwipe(task)
+            }
+
+            override fun onClose() {}
+        })
+
+        holder.binding.taskCard.setOnClickListener {
+            onTaskClicked(task)
+        }
     }
 
-    class TaskViewHolder(private val binding: ItemTaskBinding) :
+    class TaskViewHolder(val binding: ItemTaskBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val context: Context = binding.root.context
 
-        fun bind(task: Task, onTaskDoneClicked: (task: Task) -> Unit) {
+        fun bind(task: Task) {
             binding.taskTitleText.text = task.title
             binding.taskTimeText.text = task.date.format(DateTimeFormatter.ofPattern("hh:mm a"))
-
-            binding.markDoneButton.setOnClickListener { onTaskDoneClicked(task) }
 
             if (task.isDone) {
                 binding.doneText.visibility = View.VISIBLE

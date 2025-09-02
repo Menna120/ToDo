@@ -8,16 +8,16 @@
         android:pivotY="17"
         android:rotation="45">
         <path
-            android:fillColor="?attr/colorOnPrimary"
+            android:fillColor="?colorOnPrimary"
             android:pathData="M17,1.072C18.128,1.072 19.043,1.987 19.043,3.115L19.043,30.885C19.043,32.013 18.128,32.928 17,32.928C15.872,32.928 14.957,32.013 14.957,30.885L14.957,3.115L14.968,2.906C15.072,1.876 15.942,1.072 17,1.072Z"
             android:strokeWidth="1"
-            android:strokeColor="?attr/colorOnPrimary"
+            android:strokeColor="?colorOnPrimary"
             android:strokeLineJoin="round" />
         <path
-            android:fillColor="?attr/colorOnPrimary"
+            android:fillColor="?colorOnPrimary"
             android:pathData="M32.928,17C32.928,18.128 32.013,19.043 30.885,19.043L3.115,19.043C1.987,19.043 1.072,18.129 1.072,17C1.072,15.872 1.987,14.958 3.115,14.958L30.885,14.958L31.094,14.968C32.124,15.073 32.928,15.943 32.928,17Z"
             android:strokeWidth="1"
-            android:strokeColor="?attr/colorOnPrimary"
+            android:strokeColor="?colorOnPrimary"
             android:strokeLineJoin="round" />
     </group>
 </vector>

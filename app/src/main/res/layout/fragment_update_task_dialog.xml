@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/add_task_bottom_sheet_content"
+    android:id="@+id/update_dialog"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="72dp"
     android:orientation="vertical"
-    tools:showIn="@layout/activity_main">
+    android:padding="24dp"
+    app:layout_behavior="Dia"
+    tools:context=".ui.todo_list.UpdateTaskDialog">
 
     <TextView
-        android:id="@+id/add_new_tak_text_view"
+        android:id="@+id/update_task_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/add_new_task"
+        android:text="@string/update_task"
         android:textAppearance="@style/TextAppearance.App.TitleMedium"
         android:textColor="?colorOnSurface" />
 
@@ -52,7 +54,6 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/select_date_text_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"
@@ -71,7 +72,6 @@
         tools:text="12:00 AM" />
 
     <TextView
-        android:id="@+id/select_time_text_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"

@@ -1,0 +1,100 @@
+package com.example.todo.ui.todo_list
+
+import android.app.Dialog
+import android.os.Bundle
+import android.text.format.DateFormat.is24HourFormat
+import android.view.Window
+import androidx.fragment.app.DialogFragment
+import com.example.todo.database.model.Task
+import com.example.todo.databinding.FragmentUpdateTaskDialogBinding
+import com.example.todo.utils.dateFormatter
+import com.example.todo.utils.timeFormatter
+import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+
+class UpdateTaskDialog(
+    private val task: Task,
+    private val onTaskUpdateClicked: (task: Task) -> Unit
+) : DialogFragment() {
+
+    private var _binding: FragmentUpdateTaskDialogBinding? = null
+    private val binding get() = _binding!!
+
+    private var updatedDate = task.date.toLocalDate()
+    private var updatedTime = task.date.toLocalTime()
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        _binding = FragmentUpdateTaskDialogBinding.inflate(layoutInflater)
+
+        binding.taskTitleEditText.editText?.setText(task.title)
+        binding.taskDescriptionEditText.editText?.setText(task.description)
+        binding.dateText.text = task.date.format(dateFormatter)
+        binding.timeText.text = task.date.format(timeFormatter)
+
+        binding.dateText.setOnClickListener { showDatePickerDialog() }
+        binding.timeText.setOnClickListener { showTimePickerDialog() }
+
+        val builder = MaterialAlertDialogBuilder(requireActivity())
+
+        builder
+            .setView(binding.root)
+            .setPositiveButton("Update") { _, _ ->
+                val title = binding.taskTitleEditText.editText?.text.toString()
+                val description = binding.taskDescriptionEditText.editText?.text.toString()
+                val updatedTask = task.copy(
+                    title = title,
+                    description = description,
+                    date = LocalDateTime.of(updatedDate, updatedTime)
+                )
+                onTaskUpdateClicked(updatedTask)
+                dismiss()
+            }
+            .setNegativeButton("Cancel") { _, _ ->
+                dismiss()
+            }
+
+        val dialog = builder.create()
+        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
+
+        return dialog
+    }
+
+    private fun showDatePickerDialog() {
+        val datePicker =
+            MaterialDatePicker.Builder
+                .datePicker()
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build()
+
+        datePicker.show(parentFragmentManager, "tag")
+        datePicker.addOnPositiveButtonClickListener {
+            updatedDate = LocalDate.ofEpochDay(it / 86400000)
+            binding.dateText.text = updatedDate.format(dateFormatter)
+        }
+    }
+
+    private fun showTimePickerDialog() {
+        val clockFormat =
+            if (is24HourFormat(requireActivity())) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+        val picker =
+            MaterialTimePicker.Builder()
+                .setTimeFormat(clockFormat)
+                .build()
+        picker.show(parentFragmentManager, "tag")
+
+        picker.addOnPositiveButtonClickListener {
+            updatedTime = LocalTime.of(picker.hour, picker.minute)
+            binding.timeText.text = updatedTime.format(timeFormatter)
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}

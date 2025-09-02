@@ -19,6 +19,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.todo.database.TaskRepository
 import com.example.todo.database.model.Task
 import com.example.todo.databinding.ActivityMainBinding
+import com.example.todo.utils.dateFormatter
+import com.example.todo.utils.timeFormatter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -27,7 +29,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -36,8 +37,6 @@ class MainActivity : AppCompatActivity() {
 
     private var selectedDate: LocalDate = LocalDate.now()
     private var selectedTime: LocalTime = LocalTime.MIN
-    private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("EEE, MMM dd")
-    private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
