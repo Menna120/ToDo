@@ -7,6 +7,7 @@ import android.text.format.DateFormat.is24HourFormat
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -50,6 +51,16 @@ class MainActivity : AppCompatActivity() {
         setupNavigation()
         setupBottomSheet()
         setupFab()
+
+        onBackPressedDispatcher.addCallback {
+            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            } else {
+                isEnabled = false
+                handleOnBackPressed()
+                isEnabled = true
+            }
+        }
     }
 
     private fun setupNavigation() {
@@ -104,12 +115,6 @@ class MainActivity : AppCompatActivity() {
         val textWatcher = createTextWatcher(titleEditText, descriptionEditText)
         titleEditText.addTextChangedListener(textWatcher)
         descriptionEditText.addTextChangedListener(textWatcher)
-
-        binding.root.setOnClickListener {
-            if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            }
-        }
     }
 
     private fun showDatePickerDialog() {

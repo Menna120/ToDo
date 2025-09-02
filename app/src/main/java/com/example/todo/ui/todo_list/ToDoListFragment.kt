@@ -1,6 +1,5 @@
 package com.example.todo.ui.todo_list
 
-// import java.time.ZoneId // No longer needed for basic date conversion here
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -78,15 +77,16 @@ class ToDoListFragment : Fragment() {
     private fun setupDayBinder() {
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
-            override fun bind(container: DayViewContainer, data: WeekDay) = container.run {
-                container.binding.weekDay.text =
-                    data.date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
-                container.binding.monthDay.text =
-                    data.date.dayOfMonth.toString()
-                this.view.setOnClickListener { updateSelectedDay(data.date) }
-                container.binding.root.cardElevation =
-                    if (selectedDay == data.date) 16f else 0f
-                updateTextColor(this, data.date)
+            override fun bind(container: DayViewContainer, data: WeekDay) {
+                container.apply {
+                    binding.weekDay.text =
+                        data.date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                    binding.monthDay.text = data.date.dayOfMonth.toString()
+                    this.view.setOnClickListener { updateSelectedDay(data.date) }
+                    container.binding.root.cardElevation =
+                        if (selectedDay == data.date) 24f else 0f
+                    updateTextColor(this, data.date)
+                }
             }
         }
     }
@@ -113,19 +113,18 @@ class ToDoListFragment : Fragment() {
     }
 
     private fun setupCalendar() {
-        val currentMonth = YearMonth.now()
+        val currentYearMonth = YearMonth.now()
         binding.weekCalendarView.apply {
             setup(
-                currentMonth.minusMonths(100).atStartOfMonth(),
-                currentMonth.plusMonths(100).atEndOfMonth(),
+                currentYearMonth.minusYears(1).withMonth(1).atStartOfMonth(),
+                currentYearMonth.plusYears(1).withMonth(12).atEndOfMonth(),
                 firstDayOfWeekFromLocale()
             )
             scrollToWeek(selectedDay)
             weekScrollListener = { weekDays ->
                 val referenceDayInWeek = weekDays.days[3].date
-                if (YearMonth.from(referenceDayInWeek) != displayedYearMonth) {
+                if (YearMonth.from(referenceDayInWeek) != displayedYearMonth)
                     displayedYearMonth = YearMonth.from(referenceDayInWeek)
-                }
                 binding.monthYearText.text = getString(
                     R.string.month_year_format,
                     displayedYearMonth.month.getDisplayName(

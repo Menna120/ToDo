@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.todo.database.dao.TaskDao
-import com.example.todo.database.model.DateTimeConverters
 import com.example.todo.database.model.Task
+import com.example.todo.database.typeConverter.DateTimeConverters
 
 @Database(entities = [Task::class], version = 1, exportSchema = false)
 @TypeConverters(DateTimeConverters::class)

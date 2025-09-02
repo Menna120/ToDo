@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textAutoCorrect"
+            android:paddingTop="42dp"
             android:singleLine="true"
             tools:text="hi" />
 
@@ -44,6 +45,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
+            android:maxHeight="150dp"
+            android:paddingTop="42dp"
             android:singleLine="false" />
 
     </com.google.android.material.textfield.TextInputLayout>
