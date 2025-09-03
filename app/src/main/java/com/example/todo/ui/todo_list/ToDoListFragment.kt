@@ -63,12 +63,16 @@ class ToDoListFragment : Fragment() {
                 }
             },
             onTaskClicked = { task ->
-                val updateDialog = UpdateTaskDialog(task) { updateTask ->
+                val updateTaskFragment = UpdateTaskFragment(task) { updateTask ->
                     viewLifecycleOwner.lifecycleScope.launch {
                         taskRepository.updateTask(updateTask)
                     }
                 }
-                updateDialog.show(parentFragmentManager, null)
+                requireActivity().supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.todo_frame_layout, updateTaskFragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         )
         binding.tasksRecyclerView.adapter = tasksAdapter

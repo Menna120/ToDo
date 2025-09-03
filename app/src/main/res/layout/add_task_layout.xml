@@ -19,7 +19,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/task_title_edit_text"
-        style="@style/Widget.App.EditText"
+        style="@style/Widget.App.TextInputEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/title">
@@ -36,7 +36,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/task_description_edit_text"
-        style="@style/Widget.App.EditText"
+        style="@style/Widget.App.TextInputEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/description">

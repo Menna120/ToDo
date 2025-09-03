@@ -17,4 +17,5 @@
     <string name="month_year_format">%1$s %2$d</string>
     <string name="delete">Delete</string>
     <string name="update_task">Update Task</string>
+    <string name="save_changes">Save Changes</string>
 </resources>
