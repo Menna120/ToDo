@@ -1,26 +1,26 @@
 package com.example.todo.ui.todo_list
 
-import android.app.Dialog
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
-import android.view.Window
-import androidx.fragment.app.DialogFragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.todo.database.model.Task
 import com.example.todo.databinding.FragmentUpdateTaskDialogBinding
 import com.example.todo.utils.dateFormatter
 import com.example.todo.utils.timeFormatter
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-class UpdateTaskDialog(
+class UpdateTaskFragment(
     private val task: Task,
-    private val onTaskUpdateClicked: (task: Task) -> Unit
-) : DialogFragment() {
+    private val onSaveChangesClicked: (task: Task) -> Unit
+) : Fragment() {
 
     private var _binding: FragmentUpdateTaskDialogBinding? = null
     private val binding get() = _binding!!
@@ -28,9 +28,17 @@ class UpdateTaskDialog(
     private var updatedDate = task.date.toLocalDate()
     private var updatedTime = task.date.toLocalTime()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentUpdateTaskDialogBinding.inflate(layoutInflater)
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.taskTitleEditText.editText?.setText(task.title)
         binding.taskDescriptionEditText.editText?.setText(task.description)
         binding.dateText.text = task.date.format(dateFormatter)
@@ -38,30 +46,18 @@ class UpdateTaskDialog(
 
         binding.dateText.setOnClickListener { showDatePickerDialog() }
         binding.timeText.setOnClickListener { showTimePickerDialog() }
-
-        val builder = MaterialAlertDialogBuilder(requireActivity())
-
-        builder
-            .setView(binding.root)
-            .setPositiveButton("Update") { _, _ ->
-                val title = binding.taskTitleEditText.editText?.text.toString()
-                val description = binding.taskDescriptionEditText.editText?.text.toString()
-                val updatedTask = task.copy(
-                    title = title,
-                    description = description,
-                    date = LocalDateTime.of(updatedDate, updatedTime)
-                )
-                onTaskUpdateClicked(updatedTask)
-                dismiss()
-            }
-            .setNegativeButton("Cancel") { _, _ ->
-                dismiss()
-            }
-
-        val dialog = builder.create()
-        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
-
-        return dialog
+        binding.toolbar.setNavigationOnClickListener { parentFragmentManager.popBackStack() }
+        binding.saveButton.setOnClickListener {
+            val title = binding.taskTitleEditText.editText?.text.toString()
+            val description = binding.taskDescriptionEditText.editText?.text.toString()
+            val updatedTask = task.copy(
+                title = title,
+                description = description,
+                date = LocalDateTime.of(updatedDate, updatedTime)
+            )
+            onSaveChangesClicked(updatedTask)
+            parentFragmentManager.popBackStack()
+        }
     }
 
     private fun showDatePickerDialog() {
