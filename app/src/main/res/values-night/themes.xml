@@ -7,7 +7,8 @@
         <item name="colorSurface">@color/blue_gray</item>
         <item name="colorOnSurface">@color/white</item>
         <item name="colorOnSurfaceVariant">@color/gray</item>
-
+        <item name="colorErrorContainer">@color/red</item>
+        <item name="colorOnErrorContainer">@color/white</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:windowBackground">@color/navy</item>
     </style>

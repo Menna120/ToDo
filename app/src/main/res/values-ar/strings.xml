@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">قائمة المهام</string>
+    <string name="title_todo_list">قائمة المهام</string>
+    <string name="title_settings">الإعدادات</string>
+    <string name="add_task">إضافة مهمة</string>
+    <string name="add_new_task">إضافة مهمة جديدة</string>
+    <string name="enter_task_title">أدخل عنوان المهمة</string>
+    <string name="select_time">أختر الوقت</string>
+    <string name="enter_task_description">أدخل وصف المهمة</string>
+    <string name="select_date">أختر التاريخ</string>
+    <string name="title">العنوان</string>
+    <string name="description">الوصف</string>
+    <string name="mark_done">تم الانتهاء</string>
+    <string name="done">تم!</string>
+    <string name="previous_month">الشهر السابق</string>
+    <string name="next_month">الشهر التالي</string>
+    <string name="month_year_format">%1$s %2$d</string>
+    <string name="delete">حذف</string>
+    <string name="update_task">تحديث المهمة</string>
+    <string name="save_changes">حفظ التغييرات</string>
+    <string name="language">اللغة</string>
+    <string name="mode">الوضع</string>
+    <!--    <string-array name="language_array">-->
+    <!--        <item>الإنجليزية</item>-->
+    <!--        <item>العربية</item>-->
+    <!--    </string-array>-->
+    <!--    <string-array name="theme_array">-->
+    <!--        <item>فاتح</item>-->
+    <!--        <item>داكن</item>-->
+    <!--    </string-array>-->
+</resources>

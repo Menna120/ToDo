@@ -1,13 +1,13 @@
-package com.example.todo.ui.todo_list
+package com.example.todo.ui.edit_task
 
 import android.os.Bundle
-import android.text.format.DateFormat.is24HourFormat
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.todo.database.model.Task
-import com.example.todo.databinding.FragmentUpdateTaskDialogBinding
+import com.example.todo.data.database.model.Task
+import com.example.todo.databinding.FragmentUpdateTaskBinding
 import com.example.todo.utils.dateFormatter
 import com.example.todo.utils.timeFormatter
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -22,7 +22,7 @@ class UpdateTaskFragment(
     private val onSaveChangesClicked: (task: Task) -> Unit
 ) : Fragment() {
 
-    private var _binding: FragmentUpdateTaskDialogBinding? = null
+    private var _binding: FragmentUpdateTaskBinding? = null
     private val binding get() = _binding!!
 
     private var updatedDate = task.date.toLocalDate()
@@ -33,7 +33,7 @@ class UpdateTaskFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentUpdateTaskDialogBinding.inflate(layoutInflater)
+        _binding = FragmentUpdateTaskBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -80,7 +80,7 @@ class UpdateTaskFragment(
 
     private fun showTimePickerDialog() {
         val clockFormat =
-            if (is24HourFormat(requireActivity())) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
+            if (DateFormat.is24HourFormat(requireActivity())) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
         val picker =
             MaterialTimePicker.Builder()
                 .setTimeFormat(clockFormat)

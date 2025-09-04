@@ -1,9 +1,9 @@
-package com.example.todo.database.model
+package com.example.todo.data.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters // Added
-import com.example.todo.database.typeConverter.DateTimeConverters
+import com.example.todo.data.database.typeConverter.DateTimeConverters
 import java.time.LocalDateTime // Added
 
 @Entity

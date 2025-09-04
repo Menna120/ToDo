@@ -9,7 +9,7 @@
     android:background="@drawable/swipe_corner_bg"
     app:draggedItem="@id/task_card"
     app:leftItem="@id/delete_button"
-    app:swipeDirection="right">
+    app:rightItem="@id/delete_button">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
             android:layout_marginBottom="8dp"
             android:drawablePadding="4dp"
             android:text="@string/delete"
-            android:textAppearance="@style/TextAppearance.App.TitleSmall"
+            android:textAppearance="@style/TextAppearance.App.TitleSmall.Bold"
             android:textColor="?colorOnErrorContainer"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -57,7 +57,7 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/add_new_task_fab"
-            style="@style/FabWithBorder"
+            style="@style/Widget.App.FloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/add_task"
@@ -71,8 +71,7 @@
             android:layout_gravity="bottom"
             android:background="?colorSurface"
             app:contentInsetStart="0dp"
-            app:fabCradleMargin="8dp"
-            app:fabCradleRoundedCornerRadius="0dp"
+            app:fabCradleMargin="12dp"
             app:paddingBottomSystemWindowInsets="false">
 
             <com.google.android.material.bottomnavigation.BottomNavigationView

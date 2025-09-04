@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
-            android:maxHeight="150dp"
+            android:lines="2"
             android:paddingTop="42dp"
             android:singleLine="false" />
 
@@ -54,7 +54,7 @@
     <TextView
         android:id="@+id/select_date_text_view"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/select_time"
         android:textAppearance="@style/TextAppearance.App.BodyLarge"
@@ -63,7 +63,7 @@
     <TextView
         android:id="@+id/time_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingVertical="8dp"
         android:textAppearance="@style/TextAppearance.App.BodyMedium"
@@ -73,7 +73,7 @@
     <TextView
         android:id="@+id/select_time_text_view"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="@string/select_date"
         android:textAppearance="@style/TextAppearance.App.BodyLarge"
@@ -82,7 +82,7 @@
     <TextView
         android:id="@+id/date_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingVertical="8dp"
         android:textAppearance="@style/TextAppearance.App.BodyMedium"

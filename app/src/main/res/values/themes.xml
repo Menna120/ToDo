@@ -14,7 +14,7 @@
         <item name="android:windowBackground">@color/light_green</item>
     </style>
 
-    <style name="FabWithBorder" parent="Widget.MaterialComponents.FloatingActionButton">
+    <style name="Widget.App.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="backgroundTint">?attr/colorPrimary</item>
         <item name="tint">?attr/colorOnPrimary</item>
     </style>
@@ -32,6 +32,11 @@
     </style>
 
     <style name="TextAppearance.App.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:fontFamily">@font/poppins_regular</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextAppearance.App.TitleSmall.Bold" parent="TextAppearance.Material3.TitleSmall">
         <item name="android:fontFamily">@font/poppins_bold</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">14sp</item>
@@ -58,7 +63,7 @@
         <item name="android:textSize">12sp</item>
     </style>
 
-    <style name="Widget.App.TextInputEditText" parent="Widget.Material3.TextInputEditText.OutlinedBox">
+    <style name="Widget.App.TextInputEditText" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="boxBackgroundColor">@android:color/transparent</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textAppearance">@style/TextAppearance.App.BodyLarge</item>
@@ -79,4 +84,19 @@
         <item name="android:insetTop">0dp</item>
         <item name="android:textAppearance">@style/TextAppearance.App.BodyMedium</item>
     </style>
+
+    <style name="Widget.App.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxBackgroundColor">?colorSurface</item>
+        <item name="boxStrokeColor">?colorPrimary</item>
+        <item name="boxStrokeWidth">2dp</item>
+        <item name="endIconTint">@android:color/transparent</item>
+        <item name="android:textAppearance">@style/TextAppearance.App.TitleSmall</item>
+        <item name="dropDownBackgroundTint">?colorSurface</item>
+    </style>
+
+    <style name="Widget.App.AutoCompleteTextView" parent="Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox">
+        <item name="dropDownBackgroundTint">?colorSurface</item>
+        <item name="simpleItemSelectedColor">@color/light_blue</item>
+    </style>
+
 </resources>

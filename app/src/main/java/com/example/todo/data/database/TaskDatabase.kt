@@ -1,13 +1,13 @@
-package com.example.todo.database
+package com.example.todo.data.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.todo.database.dao.TaskDao
-import com.example.todo.database.model.Task
-import com.example.todo.database.typeConverter.DateTimeConverters
+import com.example.todo.data.database.dao.TaskDao
+import com.example.todo.data.database.model.Task
+import com.example.todo.data.database.typeConverter.DateTimeConverters
 
 @Database(entities = [Task::class], version = 1, exportSchema = false)
 @TypeConverters(DateTimeConverters::class)

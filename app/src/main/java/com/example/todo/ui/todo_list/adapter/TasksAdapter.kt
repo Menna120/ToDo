@@ -7,11 +7,13 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.R
-import com.example.todo.database.model.Task
+import com.example.todo.data.database.model.Task
+import com.example.todo.data.shared_prefs.SettingsSharedPreferences
 import com.example.todo.databinding.ItemTaskBinding
 import com.zerobranch.layout.SwipeLayout
 import java.time.format.DateTimeFormatter
@@ -35,10 +37,15 @@ class TasksAdapter(
 
         holder.binding.markDoneButton.setOnClickListener { onTaskDoneClicked(task) }
 
-        holder.binding.swipeLayout.setOnActionsListener(object : SwipeLayout.SwipeActionsListener {
+        holder.binding.swipeLayout.currentDirection =
+            if (AppCompatDelegate.getApplicationLocales()[0]?.toLanguageTag() == SettingsSharedPreferences.ENGLISH_LANGUAGE_CODE)
+                SwipeLayout.RIGHT
+            else SwipeLayout.LEFT
+        holder.binding.swipeLayout.setOnActionsListener(object :
+            SwipeLayout.SwipeActionsListener {
             override fun onOpen(direction: Int, isContinuous: Boolean) {
-                if (direction == SwipeLayout.RIGHT)
-                    onTaskDeleteSwipe(task)
+//                if (direction == SwipeLayout.RIGHT)
+                onTaskDeleteSwipe(task)
             }
 
             override fun onClose() {}

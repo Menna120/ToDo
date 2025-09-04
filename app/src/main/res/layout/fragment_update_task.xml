@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:windowBackground"
-    tools:context=".ui.todo_list.UpdateTaskFragment">
+    tools:context=".ui.edit_task.UpdateTaskFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="To Do List"
+        app:title="@string/title_todo_list"
         app:titleTextAppearance="@style/TextAppearance.App.TitleLarge"
         app:titleTextColor="?colorOnPrimary" />
 
@@ -53,7 +53,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            tools:context=".ui.todo_list.UpdateTaskFragment">
+            tools:context=".ui.edit_task.UpdateTaskFragment">
 
             <TextView
                 android:id="@+id/update_task_text"
@@ -68,8 +68,7 @@
                 android:id="@+id/task_title_edit_text"
                 style="@style/Widget.App.TextInputEditText"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:hint="@string/title">
 
                 <com.google.android.material.textfield.TextInputEditText

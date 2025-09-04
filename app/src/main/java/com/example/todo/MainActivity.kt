@@ -16,8 +16,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.todo.database.TaskRepository
-import com.example.todo.database.model.Task
+import com.example.todo.data.database.TaskRepository
+import com.example.todo.data.database.model.Task
 import com.example.todo.databinding.ActivityMainBinding
 import com.example.todo.utils.dateFormatter
 import com.example.todo.utils.timeFormatter

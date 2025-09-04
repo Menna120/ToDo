@@ -1,7 +1,7 @@
-package com.example.todo.database
+package com.example.todo.data.database
 
-import com.example.todo.database.dao.TaskDao
-import com.example.todo.database.model.Task
+import com.example.todo.data.database.dao.TaskDao
+import com.example.todo.data.database.model.Task
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
