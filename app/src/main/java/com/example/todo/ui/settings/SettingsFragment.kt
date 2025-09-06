@@ -7,6 +7,8 @@ import android.os.LocaleList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
@@ -38,48 +40,77 @@ class SettingsFragment : Fragment() {
     }
 
     private fun setupLanguageDropdown() {
-        AppCompatDelegate.getApplicationLocales()[0]?.displayName?.let {
-            binding.languageAutoComplete.setText(it, false)
-        }
+        val languages = resources.getStringArray(R.array.language_array)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, languages)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.languageSpinner.adapter = adapter
 
-        binding.languageAutoComplete.setOnItemClickListener { parent, _, position, _ ->
-            val languageCode = if (position == 0)
-                SettingsSharedPreferences.ENGLISH_LANGUAGE_CODE
-            else SettingsSharedPreferences.ARABIC_LANGUAGE_CODE
+        val currentLanguageCode = AppCompatDelegate.getApplicationLocales()[0]?.toLanguageTag()
+        val currentLanguagePosition =
+            if (currentLanguageCode == SettingsSharedPreferences.ARABIC_LANGUAGE_CODE) 1 else 0
+        binding.languageSpinner.setSelection(currentLanguagePosition)
 
-            val localeListCompat = LocaleListCompat.forLanguageTags(languageCode)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                val localeManager = requireActivity().getSystemService(LocaleManager::class.java)
-                localeManager?.applicationLocales = LocaleList.forLanguageTags(languageCode)
-            } else {
-                AppCompatDelegate.setApplicationLocales(localeListCompat)
+        binding.languageSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    val languageCode = if (position == 0)
+                        SettingsSharedPreferences.ENGLISH_LANGUAGE_CODE
+                    else SettingsSharedPreferences.ARABIC_LANGUAGE_CODE
+
+                    if (AppCompatDelegate.getApplicationLocales()[0]?.toLanguageTag() == languageCode) return
+
+                    val localeListCompat = LocaleListCompat.forLanguageTags(languageCode)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        val localeManager =
+                            requireActivity().getSystemService(LocaleManager::class.java)
+                        localeManager?.applicationLocales = LocaleList.forLanguageTags(languageCode)
+                    } else {
+                        AppCompatDelegate.setApplicationLocales(localeListCompat)
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
-        }
     }
 
     private fun setupThemeDropdown() {
         val themes = resources.getStringArray(R.array.theme_array)
-//        val adapter =
-//            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, themes)
-//        binding.themeAutoComplete.setAdapter(adapter)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, themes)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.themeSpinner.adapter = adapter
 
-        val currentThemeInitialText =
+        val currentThemePosition =
             if (settingsSharedPreferences.getTheme() == SettingsSharedPreferences.LIGHT_THEME)
-                themes.getOrNull(0)
-            else themes.getOrNull(1)
-        currentThemeInitialText?.let { binding.themeAutoComplete.setText(it, false) }
+                0
+            else 1
+        binding.themeSpinner.setSelection(currentThemePosition)
 
-        binding.themeAutoComplete.setOnItemClickListener { parent, _, position, _ ->
-            val selectedThemeName = parent.getItemAtPosition(position).toString()
-            settingsSharedPreferences.setTheme(selectedThemeName)
+        binding.themeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val selectedThemeName = parent?.getItemAtPosition(position).toString()
 
-            val nightMode =
-                if (selectedThemeName == themes.getOrNull(0)) {
-                    AppCompatDelegate.MODE_NIGHT_NO
-                } else {
-                    AppCompatDelegate.MODE_NIGHT_YES
-                }
-            AppCompatDelegate.setDefaultNightMode(nightMode)
+                if (settingsSharedPreferences.getTheme() == selectedThemeName) return
+
+                settingsSharedPreferences.setTheme(selectedThemeName)
+
+                val nightMode =
+                    if (selectedThemeName == themes.getOrNull(0)) AppCompatDelegate.MODE_NIGHT_NO
+                    else AppCompatDelegate.MODE_NIGHT_YES
+                AppCompatDelegate.setDefaultNightMode(nightMode)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 

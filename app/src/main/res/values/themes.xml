@@ -85,18 +85,13 @@
         <item name="android:textAppearance">@style/TextAppearance.App.BodyMedium</item>
     </style>
 
-    <style name="Widget.App.ExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-        <item name="boxBackgroundColor">?colorSurface</item>
-        <item name="boxStrokeColor">?colorPrimary</item>
-        <item name="boxStrokeWidth">2dp</item>
-        <item name="endIconTint">@android:color/transparent</item>
+    <style name="Widget.App.Spinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@drawable/bg_stroke</item>
         <item name="android:textAppearance">@style/TextAppearance.App.TitleSmall</item>
-        <item name="dropDownBackgroundTint">?colorSurface</item>
+        <item name="android:popupBackground">?colorSurface</item>
+        <item name="android:minHeight">64dp</item>
+        <item name="android:paddingHorizontal">8dp</item>
+        <item name="android:dropDownWidth">match_parent</item>
+        <item name="android:overlapAnchor">false</item>
     </style>
-
-    <style name="Widget.App.AutoCompleteTextView" parent="Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox">
-        <item name="dropDownBackgroundTint">?colorSurface</item>
-        <item name="simpleItemSelectedColor">@color/light_blue</item>
-    </style>
-
 </resources>

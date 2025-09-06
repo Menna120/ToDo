@@ -15,8 +15,8 @@ import com.example.todo.R
 import com.example.todo.data.database.model.Task
 import com.example.todo.data.shared_prefs.SettingsSharedPreferences
 import com.example.todo.databinding.ItemTaskBinding
+import com.example.todo.utils.timeFormatter
 import com.zerobranch.layout.SwipeLayout
-import java.time.format.DateTimeFormatter
 
 class TasksAdapter(
     private val onTaskDoneClicked: (task: Task) -> Unit,
@@ -43,10 +43,7 @@ class TasksAdapter(
             else SwipeLayout.LEFT
         holder.binding.swipeLayout.setOnActionsListener(object :
             SwipeLayout.SwipeActionsListener {
-            override fun onOpen(direction: Int, isContinuous: Boolean) {
-//                if (direction == SwipeLayout.RIGHT)
-                onTaskDeleteSwipe(task)
-            }
+            override fun onOpen(direction: Int, isContinuous: Boolean) = onTaskDeleteSwipe(task)
 
             override fun onClose() {}
         })
@@ -62,7 +59,8 @@ class TasksAdapter(
 
         fun bind(task: Task) {
             binding.taskTitleText.text = task.title
-            binding.taskTimeText.text = task.date.format(DateTimeFormatter.ofPattern("hh:mm a"))
+            binding.taskTimeText.text =
+                task.date.toLocalTime().format(timeFormatter(context))
 
             if (task.isDone) {
                 binding.doneText.visibility = View.VISIBLE

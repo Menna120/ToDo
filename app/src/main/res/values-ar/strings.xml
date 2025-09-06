@@ -21,12 +21,12 @@
     <string name="save_changes">حفظ التغييرات</string>
     <string name="language">اللغة</string>
     <string name="mode">الوضع</string>
-    <!--    <string-array name="language_array">-->
-    <!--        <item>الإنجليزية</item>-->
-    <!--        <item>العربية</item>-->
-    <!--    </string-array>-->
-    <!--    <string-array name="theme_array">-->
-    <!--        <item>فاتح</item>-->
-    <!--        <item>داكن</item>-->
-    <!--    </string-array>-->
+    <string-array name="language_array">
+        <item>الإنجليزية</item>
+        <item>العربية</item>
+    </string-array>
+    <string-array name="theme_array">
+        <item>فاتح</item>
+        <item>داكن</item>
+    </string-array>
 </resources>

@@ -11,9 +11,9 @@ import com.example.todo.R
 import com.example.todo.ToDoApplication
 import com.example.todo.data.database.TaskRepository
 import com.example.todo.databinding.FragmentTodoListBinding
-import com.example.todo.ui.edit_task.UpdateTaskFragment
 import com.example.todo.ui.todo_list.adapter.DayViewContainer
 import com.example.todo.ui.todo_list.adapter.TasksAdapter
+import com.example.todo.ui.update_task.UpdateTaskFragment
 import com.kizitonwose.calendar.core.WeekDay
 import com.kizitonwose.calendar.core.atStartOfMonth
 import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
@@ -21,6 +21,7 @@ import com.kizitonwose.calendar.view.WeekDayBinder
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -96,10 +97,14 @@ class ToDoListFragment : Fragment() {
         binding.weekCalendarView.dayBinder = object : WeekDayBinder<DayViewContainer> {
             override fun create(view: View) = DayViewContainer(view)
             override fun bind(container: DayViewContainer, data: WeekDay) {
+                val currentLocale = requireContext().resources.configuration.locales[0]
+                val dayOfMonthFormatted = NumberFormat.getIntegerInstance(currentLocale)
+                    .format(data.date.dayOfMonth.toLong())
+
                 container.apply {
                     binding.weekDay.text =
-                        data.date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
-                    binding.monthDay.text = data.date.dayOfMonth.toString()
+                        data.date.dayOfWeek.getDisplayName(TextStyle.SHORT, currentLocale)
+                    binding.monthDay.text = dayOfMonthFormatted
                     this.view.setOnClickListener { updateSelectedDay(data.date) }
                     container.binding.root.cardElevation =
                         if (selectedDay == data.date) 24f else 0f

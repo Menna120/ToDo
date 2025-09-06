@@ -82,8 +82,8 @@ class MainActivity : AppCompatActivity() {
         val timeText = binding.addTaskBottomSheetContent.timeText
         val dayText = binding.addTaskBottomSheetContent.dateText
 
-        dayText.text = selectedDate.format(dateFormatter)
-        timeText.text = selectedTime.format(timeFormatter)
+        dayText.text = selectedDate.format(dateFormatter(this))
+        timeText.text = selectedTime.format(timeFormatter(this))
 
         dayText.setOnClickListener { showDatePickerDialog() }
         timeText.setOnClickListener { showTimePickerDialog() }
@@ -126,7 +126,8 @@ class MainActivity : AppCompatActivity() {
         datePicker.show(supportFragmentManager, "tag")
         datePicker.addOnPositiveButtonClickListener {
             selectedDate = LocalDate.ofEpochDay(it / 86400000)
-            binding.addTaskBottomSheetContent.dateText.text = selectedDate.format(dateFormatter)
+            binding.addTaskBottomSheetContent.dateText.text =
+                selectedDate.format(dateFormatter(this))
         }
     }
 
@@ -140,7 +141,8 @@ class MainActivity : AppCompatActivity() {
 
         picker.addOnPositiveButtonClickListener {
             selectedTime = LocalTime.of(picker.hour, picker.minute)
-            binding.addTaskBottomSheetContent.timeText.text = selectedTime.format(timeFormatter)
+            binding.addTaskBottomSheetContent.timeText.text =
+                selectedTime.format(timeFormatter(this))
         }
     }
 
@@ -196,8 +198,8 @@ class MainActivity : AppCompatActivity() {
 
             selectedDate = LocalDate.now()
             selectedTime = LocalTime.now()
-            dayText.text = selectedDate.format(dateFormatter)
-            timeText.text = selectedTime.format(timeFormatter)
+            dayText.text = selectedDate.format(dateFormatter(this))
+            timeText.text = selectedTime.format(timeFormatter(this))
 
             hideKeyboard(titleEditText)
         }

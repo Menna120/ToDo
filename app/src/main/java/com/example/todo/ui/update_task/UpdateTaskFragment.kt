@@ -1,4 +1,4 @@
-package com.example.todo.ui.edit_task
+package com.example.todo.ui.update_task
 
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -41,8 +41,8 @@ class UpdateTaskFragment(
         super.onViewCreated(view, savedInstanceState)
         binding.taskTitleEditText.editText?.setText(task.title)
         binding.taskDescriptionEditText.editText?.setText(task.description)
-        binding.dateText.text = task.date.format(dateFormatter)
-        binding.timeText.text = task.date.format(timeFormatter)
+        binding.dateText.text = task.date.toLocalDate().format(dateFormatter(requireContext()))
+        binding.timeText.text = task.date.toLocalTime().format(timeFormatter(requireContext()))
 
         binding.dateText.setOnClickListener { showDatePickerDialog() }
         binding.timeText.setOnClickListener { showTimePickerDialog() }
@@ -74,7 +74,7 @@ class UpdateTaskFragment(
         datePicker.show(parentFragmentManager, "tag")
         datePicker.addOnPositiveButtonClickListener {
             updatedDate = LocalDate.ofEpochDay(it / 86400000)
-            binding.dateText.text = updatedDate.format(dateFormatter)
+            binding.dateText.text = updatedDate.format(dateFormatter(requireContext()))
         }
     }
 
@@ -89,7 +89,7 @@ class UpdateTaskFragment(
 
         picker.addOnPositiveButtonClickListener {
             updatedTime = LocalTime.of(picker.hour, picker.minute)
-            binding.timeText.text = updatedTime.format(timeFormatter)
+            binding.timeText.text = updatedTime.format(timeFormatter(requireContext()))
         }
     }
 
